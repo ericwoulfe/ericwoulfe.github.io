@@ -2,45 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Promise fundamentals example</title>
+  <title>More Generators examples</title>
    
 </head>
 <body>
    
-<p>Review the console log - that is where the excitement is happening!</p>  
+<p>Review the console log - that is where the excitement is happening! This relies on multiple AJAX calls. Given CORS constraints, this will also only work with a server. You can not rely on the file system for this example. As with many other examples, this is modified from one in the Wes Bos ES6 course.</p>  
 
 <script>
 
-console.log('\n\nObtaining latest posts\n\n'); 
+console.log('\n\nGenerators and AJAX\n\n'); 
     
-const recentPosts = fetch('https://feeds.citibikenyc.com/stations/stations.json');
+function* callAPIs(){
+    // remember, these may take a while to return data
+    console.log('Getting Web Pro blog posts');
+    const webPro = yield ajaxCall('https://www.webprofessionals.org/wp-json/wp/v2/posts');
+    console.log(webPro);
+    console.log('Getting Mark\'s blog posts');    
+    const marks = yield ajaxCall('https://www.markdubois.info/weblog/wp-json/wp/v2/posts');
+    console.log(marks);    
+    console.log('Getting Learning HTML5 blog posts');    
+    const learnHTML5 = yield ajaxCall('https://www.learning-html5.info/blog/wp-json/wp/v2/posts');
+    console.log(learnHTML5);    
+}
+
+function ajaxCall(webSiteAPI){
+    fetch(webSiteAPI)
+    .then(dataReturned => dataReturned.json())
+    .then(dataReturned => getData.next(dataReturned));
+}    
     
-console.log('Posts have been fetched'); 
+const getData = callAPIs();
+getData.next(); // need to start the process to yield first data    
     
-console.log(recentPosts);    
-    
-console.log('\n\nUsing then method\n\n'); 
-    
-recentPosts.then(theData => {
-    console.log(theData);
-});
-    
-console.log('\n\nUsing then method, JSON identified\n\n'); 
-    
-recentPosts.then(theData => theData.json().then(theData =>{
-    console.log(theData);
-}));
-    
-console.log('\n\nUsing then method with catch, JSON identified\n\n'); 
-    
-recentPosts
-    .then(theData => theData.json()
-    .then(theData =>{
-    console.log(theData)})
-    .catch((err) => {
-        console.error(err)
-    }));    
-                 
 </script>
    
 </body>
