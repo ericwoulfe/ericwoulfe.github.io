@@ -2,29 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Multiple Promises example</title>
+  <title>Promise fundamentals example</title>
    
 </head>
 <body>
    
-<p>Review the console log - that is where the excitement is happening! This code must run on an actual server. Do not attempt to use the file system due to CORS.</p>  
+<p>Review the console log - that is where the excitement is happening!</p>  
 
 <script>
 
-console.log('\n\nMultiple promises\n\n'); 
-
-const webProData = fetch('https://webprofessionals.org/wp-json/wp/v2/posts');
-const markData = fetch('https://www.markdubois.info/weblog/wp-json/wp/v2/posts');
+console.log('\n\nObtaining latest posts\n\n'); 
     
-Promise
-    .all([webProData, markData])
-    .then(responses => {
-        return Promise.all(responses.map(eachRes => eachRes.json()))})
-    .then(responses => {
-        console.log(responses)
-})
-
+const recentPosts = fetch('https://feeds.citibikenyc.com/stations/stations.json');
     
+console.log('Posts have been fetched'); 
+    
+console.log(recentPosts);    
+    
+console.log('\n\nUsing then method\n\n'); 
+    
+recentPosts.then(theData => {
+    console.log(theData);
+});
+    
+console.log('\n\nUsing then method, JSON identified\n\n'); 
+    
+recentPosts.then(theData => theData.json().then(theData =>{
+    console.log(theData);
+}));
+    
+console.log('\n\nUsing then method with catch, JSON identified\n\n'); 
+    
+recentPosts
+    .then(theData => theData.json()
+    .then(theData =>{
+    console.log(theData)})
+    .catch((err) => {
+        console.error(err)
+    }));    
+                 
 </script>
    
 </body>
