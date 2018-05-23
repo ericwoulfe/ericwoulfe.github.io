@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Multiple Promises example</title>
+   
+</head>
+<body>
+   
+<p>Review the console log - that is where the excitement is happening! This code must run on an actual server. Do not attempt to use the file system due to CORS.</p>  
+
+<script>
+
+console.log('\n\nMultiple promises\n\n'); 
+
+const webProData = fetch('https://webprofessionals.org/wp-json/wp/v2/posts');
+const markData = fetch('https://www.markdubois.info/weblog/wp-json/wp/v2/posts');
+    
+Promise
+    .all([webProData, markData])
+    .then(responses => {
+        return Promise.all(responses.map(eachRes => eachRes.json()))})
+    .then(responses => {
+        console.log(responses)
+})
+
+    
+</script>
+   
+</body>
+</html>
